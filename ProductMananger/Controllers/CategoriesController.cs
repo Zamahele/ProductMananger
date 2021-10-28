@@ -64,6 +64,46 @@ namespace ProductMananger.Controllers
             return View(category);
         }
 
+        public IActionResult ValidateCategory(string categoryCode)
+        {
+            var result = CategoryExists(categoryCode);
+            if (result)
+                return Json(data: "Category Code in used,Please use 3 alphabet letters and three numeric characters e.g., ABC123");
+
+            if (!ValidateFormat(categoryCode))
+                return Json(data: "Invalid Format,Please use 3 alphabet letters and three numeric characters e.g., ABC123");
+
+
+            return Json(data: true);
+        }
+
+        public bool ValidateFormat(string categoryCode)
+        {
+            var result1 = true;
+            var result2 = true;
+            var getFirstThreeLetters = categoryCode.Substring(0, 3);
+            var getLastThreeNumbers = categoryCode.Substring(3);
+
+            FormatValidationString(ref result1, ref result2, getFirstThreeLetters, getLastThreeNumbers);
+
+            return result1 == result2;
+        }
+
+        private static void FormatValidationString(ref bool result1, ref bool result2, string getFirstThreeLetters, string getLastThreeNumbers)
+        {
+            foreach (var myChar in getFirstThreeLetters)
+            {
+                if (Char.IsDigit(Convert.ToChar(myChar)))
+                    result1 = false;
+            }
+            if (result1)
+                foreach (var myChar in getLastThreeNumbers)
+                {
+                    if (!Char.IsDigit(Convert.ToChar(myChar)))
+                        result2 = false;
+                }
+        }
+
         // GET: Categories/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -145,5 +185,11 @@ namespace ProductMananger.Controllers
         {
             return _context.FindAll().Any(e => e.CategoryId == id);
         }
+
+        private bool CategoryExists(string CategoryCode)
+        {
+            return _context.FindAll().Any(e => e.CategoryCode == CategoryCode);
+        }
+        
     }
 }

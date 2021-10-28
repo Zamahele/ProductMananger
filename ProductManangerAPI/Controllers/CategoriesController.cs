@@ -25,14 +25,14 @@ namespace ProductManangerAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Category>>> GetCategory()
         {
-            return await _context.Category.ToListAsync();
+            return await _context.Category.Include(n=>n.Products).ToListAsync();
         }
 
         // GET: api/Categories/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Category>> GetCategory(int id)
         {
-            var category = await _context.Category.FindAsync(id);
+            var category = await _context.Category.Include(n=>n.Products).FirstOrDefaultAsync(x=>x.CategoryId == id);
 
             if (category == null)
             {

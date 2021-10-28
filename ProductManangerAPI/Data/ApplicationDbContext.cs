@@ -9,13 +9,17 @@ namespace ProductManangerAPI.Data
 {
     public class ApplicationDbContext : DbContext
     {
-        public ApplicationDbContext (DbContextOptions<ApplicationDbContext> options)
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
         }
 
-        public DbSet<ProductManangerAPI.Model.Product> Product { get; set; }
+        public DbSet<Product> Product { get; set; }
+        public DbSet<Category> Category { get; set; }
 
-        public DbSet<ProductManangerAPI.Model.Category> Category { get; set; }
+        //protected override void OnModelCreating(ModelBuilder builder)
+        //{
+        //    builder.Entity<Product>().HasIndex(u => u.ProductCode).IsUnique(true);
+        //}
     }
 }

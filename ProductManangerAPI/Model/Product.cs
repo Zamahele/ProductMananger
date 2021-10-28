@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -7,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace ProductManangerAPI.Model
 {
+    [Index(nameof(ProductCode), IsUnique = true)]
     public class Product
     {
 

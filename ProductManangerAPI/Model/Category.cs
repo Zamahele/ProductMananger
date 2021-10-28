@@ -16,5 +16,7 @@ namespace ProductManangerAPI.Model
         public string CategoryCode { get; set; }
         [Required]
         public bool IsActive { get; set; }
+
+        public ICollection<Product> Products { get; set; }
     }
 }

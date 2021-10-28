@@ -65,11 +65,12 @@ namespace ProductMananger.Controllers
         public async Task<IActionResult> Create([Bind("ProductId,ProductCode,Name,Description,CategoryName,Price,Image,CategoryId")] Product product)
         {
             AsingImange(product);
-            if (ModelState.IsValid)
+            if (Request.Form.Files.Count > 0)
             {
                 await Task.Run(() => _context.Save(product));
                 return RedirectToAction(nameof(Index));
             }
+            ModelState.AddModelError(string.Empty, "Please choose an Image to upload");
             ViewData["CategoryId"] = new SelectList(_contextCat.FindAll(), "CategoryId", "CategoryCode", product.CategoryId);
             return View(product);
         }
@@ -167,5 +168,6 @@ namespace ProductMananger.Controllers
         {
              return _context.FindAll().Any(e => e.CategoryId == id);
         }
+
     }
 }
