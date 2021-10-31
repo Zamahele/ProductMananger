@@ -53,6 +53,7 @@ namespace ProductMananger.Controllers
         // GET: Products/Create
         public IActionResult Create()
         {
+            ViewData["ProductCode"] = DateTime.Now.ToString("yyyyMM") +"-"+ _context.FindAll().Count()+1;
             ViewData["CategoryId"] = new SelectList( _contextCat.FindAll(), "CategoryId", "CategoryCode");
             return View();
         }
@@ -118,7 +119,8 @@ namespace ProductMananger.Controllers
             {
                 try
                 {
-                     await Task.Run(()=> _context.Update(product,id));
+                    AsingImange(product);
+                    await Task.Run(() => _context.Update(product, id));
                 }
                 catch (DbUpdateConcurrencyException)
                 {

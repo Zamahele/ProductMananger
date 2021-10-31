@@ -12,7 +12,7 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="ProductCode" class="control-label"></label>
-                <input asp-for="ProductCode" class="form-control" />
+                <input asp-for="ProductCode" class="form-control" value="@ViewBag.ProductCode" readonly ="readonly" />
                 <span asp-validation-for="ProductCode" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -45,14 +45,11 @@
                 <select asp-for="CategoryId" class="form-control" asp-items="ViewBag.CategoryId"></select>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Save" class="btn btn-primary" style="float:right" />
+                <a asp-action="Index" class="btn btn-danger">Cancel</a>
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {
