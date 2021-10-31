@@ -16,6 +16,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using ProductManangerAPI.Data;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace ProductManangerAPI
 {
@@ -31,17 +34,43 @@ namespace ProductManangerAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddMicrosoftIdentityWebApi(Configuration.GetSection("AzureAd"));
-
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "ProductManangerAPI", Version = "v1" });
             });
 
+            // For Entity Framework 
             services.AddDbContext<ApplicationDbContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("ApplicationDbContext")));
+
+            // For Identity  
+            services.AddIdentity<ApplicationUser, IdentityRole>()
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders();
+
+            // Adding Authentication  
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+
+            // Adding Jwt Bearer  
+            .AddJwtBearer(options =>
+            {
+                options.SaveToken = true;
+                options.RequireHttpsMetadata = false;
+                options.TokenValidationParameters = new TokenValidationParameters()
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidAudience = Configuration["JWT:ValidAudience"],
+                    ValidIssuer = Configuration["JWT:ValidIssuer"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWT:Secret"]))
+                };
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

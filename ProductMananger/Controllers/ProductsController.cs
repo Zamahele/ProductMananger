@@ -10,9 +10,12 @@ using ProductMananger.Data;
 using BLL.Category;
 using BLL.Repository;
 using System.IO;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ProductMananger.Controllers
 {
+    [Authorize]
     public class ProductsController : Controller
     {
          private readonly Repository<Product> _context;
@@ -170,6 +173,30 @@ namespace ProductMananger.Controllers
         {
              return _context.FindAll().Any(e => e.CategoryId == id);
         }
+
+
+        public IActionResult ImportExcel()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public void ImportExcel(IList<IFormFile> files)
+        {
+
+            foreach (var file in files)
+            {
+                var fileName = Path.GetFileNameWithoutExtension(file.FileName);
+                var extension = Path.GetExtension(file.FileName);
+
+            }
+             var filePath = Path.GetTempFileName();
+            string filePath1 = null;
+            if (Request.Form.Files.Count == 0) return;
+           var getProductData = new ExcelData().ProductExcelData(filePath);
+        }
+
+
 
     }
 }

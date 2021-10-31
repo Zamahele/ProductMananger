@@ -8,9 +8,11 @@ using Microsoft.EntityFrameworkCore;
 using BLL.Category;
 using ProductMananger.Data;
 using BLL.Repository;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ProductMananger.Controllers
 {
+     [Authorize]
     public class CategoriesController : Controller
     {
         private readonly Repository<Category> _context;
