@@ -12,6 +12,8 @@ using BLL.Repository;
 using System.IO;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authorization;
+using BLL;
+using ProductMananger.Models;
 
 namespace ProductMananger.Controllers
 {
@@ -20,14 +22,16 @@ namespace ProductMananger.Controllers
     {
          private readonly Repository<Product> _context;
         private readonly Repository<Category> _contextCat;
+        private readonly ITokenService tokenService;
 
-        public ProductsController(Repository<Product> context, Repository<Category> contextCat)
+        public ProductsController(Repository<Product> context, Repository<Category> contextCat,ITokenService tokenService)
         {
             _context = context;
             _context.requestUrl = "Products";
 
             _contextCat = contextCat;
             _contextCat.requestUrl = "Categories";
+
         }
 
         // GET: Products

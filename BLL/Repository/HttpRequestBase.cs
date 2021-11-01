@@ -10,12 +10,14 @@ namespace BLL.Repository
 {
     public class HttpRequestBase
     {
+    
         public static readonly HttpClient httpClient = new HttpClient(new HttpClientHandler { UseDefaultCredentials = true });
         static HttpRequestBase()
         {
             httpClient.BaseAddress = new Uri("http://localhost:4300/api/");
             httpClient.DefaultRequestHeaders.Clear();
             httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Security.UserToken);
         }
     }
 }

@@ -9,6 +9,7 @@ namespace BLL.Repository
     {
         public string requestUrl { get; set; }
 
+
         public IQueryable<T> FindAll()
         {
             var response = HttpRequestBase.httpClient.GetAsync(requestUrl).Result;
