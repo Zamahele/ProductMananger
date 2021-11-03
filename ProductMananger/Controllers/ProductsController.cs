@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Authorization;
 using BLL;
 using ProductMananger.Models;
 using AspNetCoreHero.ToastNotification.Abstractions;
+using ClosedXML.Excel;
 
 namespace ProductMananger.Controllers
 {
@@ -40,11 +41,11 @@ namespace ProductMananger.Controllers
         public async Task<IActionResult> Index()
         {
             var getProduts = await Task.Run(() => _context.FindAll());
-            DependencyAssiging(getProduts);
+            DependencyAssiging(getProduts.ToList());
             return View(getProduts);
         }
 
-        private void DependencyAssiging(IQueryable<Product> getProduts)
+        private void DependencyAssiging(List<Product> getProduts)
         {
             foreach (var product in getProduts)
             {
@@ -219,6 +220,55 @@ namespace ProductMananger.Controllers
             string filePath1 = null;
             if (Request.Form.Files.Count == 0) return;
            var getProductData = new ExcelData().ProductExcelData(filePath);
+        }
+
+        public IActionResult ExportDataTabletoExcel() 
+        {
+
+            var products = _context.FindAll().ToList();
+            DependencyAssiging(products);
+            try
+            {
+                using (var workbook = new XLWorkbook())
+                {
+                    IXLWorksheet worksheet =
+                    workbook.Worksheets.Add("Product");
+                    worksheet.Cell(1, 1).Value = "Product Code";
+                    worksheet.Cell(1, 2).Value = "Name";
+                    worksheet.Cell(1, 3).Value = "Description";
+                    worksheet.Cell(1, 4).Value = "Price";
+                    worksheet.Cell(1, 5).Value = "Category";
+
+
+                    for (int index = 1; index <= 6; index++)
+                    {
+                        worksheet.Cell(1, index).Style.Font.Bold = true;
+                    }
+
+
+                    for (int index = 1; index <= products.Count; index++)
+                    {
+                        worksheet.Cell(index + 1, 1).Value = products[index - 1].ProductCode;
+                        worksheet.Cell(index + 1, 2).Value = products[index - 1].Name;
+                        worksheet.Cell(index + 1, 3).Value = products[index - 1].Description;
+                        worksheet.Cell(index + 1, 4).Value = products[index - 1].Price;
+                        worksheet.Cell(index + 1, 5).Value = products[index - 1].Category.CategoryCode;
+
+                    }
+
+
+                    using (var stream = new MemoryStream())
+                    {
+                        workbook.SaveAs(stream);
+                        return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", $"ProductSheet {DateTime.Now.AddMonths(DateTime.Now.Month).ToString("MMMM-yyyy")}.xlsx");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return RedirectToAction();
         }
 
 

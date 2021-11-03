@@ -20,7 +20,7 @@ namespace BLL.Category
         [DisplayName("Category Code")]
         [MaxLength(6,ErrorMessage ="Incorect Format,Please use 3 alphabet letters and three numeric characters e.g., ABC123")]
         [MinLength(6,ErrorMessage ="Incorect Format,Please use 3 alphabet letters and three numeric characters e.g., ABC123")]
-        [Remote("ValidateCategory", "Categories")]
+        [Remote("ValidateCategory", "Categories",AdditionalFields  ="CategoryId")]
         public string CategoryCode { get; set; }
         [Required]
         public bool IsActive { get; set; }

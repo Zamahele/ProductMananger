@@ -70,12 +70,15 @@ namespace ProductMananger.Controllers
             return View(category);
         }
 
-        public IActionResult ValidateCategory(string categoryCode)
+        public IActionResult ValidateCategory(string categoryCode, int categoryId)
         {
-            var result = CategoryExists(categoryCode);
-            if (result)
-                return Json(data: "Category Code in used,Please use 3 alphabet letters and three numeric characters e.g., ABC123");
-
+            //Only fire when its a new category to be created
+            if (categoryId == 0)
+            {
+                var result = CategoryExists(categoryCode);
+                if (result)
+                    return Json(data: "Category Code in used,Please use 3 alphabet letters and three numeric characters e.g., ABC123");
+            }
             if (!ValidateFormat(categoryCode))
                 return Json(data: "Invalid Format,Please use 3 alphabet letters and three numeric characters e.g., ABC123");
 
