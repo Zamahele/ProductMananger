@@ -4,4 +4,5 @@
 - Open the application and run ProductManangerAPI inside 3.Service, get the url.
 - Then Move to BLL, open app.config file, and change the Url Value to the open you copied above.
 - Set <Multiple Startup Projects> and select ProductMananger,ProductManangerAPI and run the project.
-# System flow diagram is attached into the repository as well.
+
+ - System flow diagram is attached into the repository as well.
