@@ -12,7 +12,7 @@ namespace BLL.Repository
 
         public IQueryable<T> FindAll()
         {
-            var response = HttpRequestBase.httpClient.GetAsync(requestUrl).Result;
+            var response =  HttpRequestBase.httpClient.GetAsync(requestUrl).Result;
             if (!response.IsSuccessStatusCode)
                 throw new Exception(response.ToString());
             var result = response.Content.ReadAsAsync<IEnumerable<T>>().Result;

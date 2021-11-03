@@ -37,7 +37,22 @@ namespace ProductMananger.Controllers
         // GET: Products
         public async Task<IActionResult> Index()
         {
-            return View(await Task.Run(() => _context.FindAll()));
+            var getProduts = await Task.Run(() => _context.FindAll());
+            DependencyAssiging(getProduts);
+            return View(getProduts);
+        }
+
+        private void DependencyAssiging(IQueryable<Product> getProduts)
+        {
+            foreach (var product in getProduts)
+            {
+                product.Category = _contextCat.Find(product.CategoryId);
+            }
+        }
+
+        private void AssignDependency(Product x)
+        {
+            throw new NotImplementedException();
         }
 
         // GET: Products/Details/5

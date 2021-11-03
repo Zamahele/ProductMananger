@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -28,7 +29,17 @@ namespace ProductManangerAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Product>>> GetProduct()
         {
-            return await _context.Product.ToListAsync();
+            try
+            {
+                var produects = await _context.Product.ToListAsync();
+                return produects;
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+
         }
 
         // GET: api/Products/5
@@ -54,12 +65,11 @@ namespace ProductManangerAPI.Controllers
             {
                 return BadRequest();
             }
-
-            _context.Entry(product).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
+                var getProduct = await _context.Product.FindAsync(id);
+                 _context.Entry(getProduct).CurrentValues.SetValues(product);
+                await _context.SaveChangesAsync(User.Identity.Name);
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -82,7 +92,7 @@ namespace ProductManangerAPI.Controllers
         public async Task<ActionResult<Product>> PostProduct(Product product)
         {
             _context.Product.Add(product);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(User.Identity.Name);
 
             return CreatedAtAction("GetProduct", new { id = product.ProductId }, product);
         }
@@ -98,7 +108,7 @@ namespace ProductManangerAPI.Controllers
             }
 
             _context.Product.Remove(product);
-            await _context.SaveChangesAsync();
+             await _context.SaveChangesAsync(User.Identity.Name);
 
             return NoContent();
         }

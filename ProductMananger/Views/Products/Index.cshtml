@@ -23,7 +23,7 @@
                 @Html.DisplayNameFor(model => model.Description)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.CategoryName)
+                @Html.DisplayNameFor(model => model.Category)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Price)
@@ -31,10 +31,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.Image)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Category)
-            </th>
-            <th></th>
+            <th>Action</th>
         </tr>
     </thead>
     <tbody>
@@ -50,7 +47,7 @@
                 @Html.DisplayFor(modelItem => item.Description)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.CategoryName)
+                @Html.DisplayFor(modelItem => item.Category.Name)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Price)
@@ -61,9 +58,6 @@
                     string imageDataURL = string.Format("data:image/jpg;base64,{0}", imageBase64Data);
                     <img src="@imageDataURL" class="img-thumbnail">
                 }
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Category.CategoryCode)
             </td>
             <td>
                 <div class="dropdown">

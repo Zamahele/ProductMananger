@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -53,12 +54,11 @@ namespace ProductManangerAPI.Controllers
             {
                 return BadRequest();
             }
-
-            _context.Entry(category).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
+                var getCategory = await _context.Category.FindAsync(id);
+                 _context.Entry(getCategory).CurrentValues.SetValues(category);
+                await _context.SaveChangesAsync(User.Identity.Name);
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -81,8 +81,7 @@ namespace ProductManangerAPI.Controllers
         public async Task<ActionResult<Category>> PostCategory(Category category)
         {
             _context.Category.Add(category);
-            await _context.SaveChangesAsync();
-
+            await _context.SaveChangesAsync(User.Identity.Name);
             return CreatedAtAction("GetCategory", new { id = category.CategoryId }, category);
         }
 
@@ -97,8 +96,7 @@ namespace ProductManangerAPI.Controllers
             }
 
             _context.Category.Remove(category);
-            await _context.SaveChangesAsync();
-
+            await _context.SaveChangesAsync(User.Identity.Name);
             return NoContent();
         }
 

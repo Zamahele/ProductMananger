@@ -23,8 +23,6 @@ namespace ProductManangerAPI.Model
         public string Name { get; set; }
 
         public string Description { get; set; }
-        [Required]
-        public string CategoryName { get; set; }
 
         [Required]
         public decimal Price { get; set; }
@@ -34,5 +32,7 @@ namespace ProductManangerAPI.Model
 
         [ForeignKey("CategoryId")]
         public int CategoryId { get; set; }
+        //public Category Category { get; set; }
+
     }
 }

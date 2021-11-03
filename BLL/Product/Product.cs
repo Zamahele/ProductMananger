@@ -22,11 +22,7 @@ namespace BLL.Product
 
         [Required]
         public string Name { get; set; }
-
         public string Description { get; set; }
-        [Required]
-        [DisplayName("Category Name")]
-        public string CategoryName { get; set; }
 
         [Required]
         [Column(TypeName = "decimal(18,2)")]
@@ -37,6 +33,7 @@ namespace BLL.Product
 
         [ForeignKey("CategoryId")]
         public int CategoryId { get; set; }
+        [DisplayName("Category Name")]
         public Category.Category Category { get; set; }
     }
 }

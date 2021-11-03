@@ -26,7 +26,6 @@ namespace BLL.Product
                             ProductCode = reader.GetValue(0).ToString(),
                             Name = reader.GetValue(1).ToString(),
                             Description = reader.GetValue(2).ToString(),
-                            CategoryName = reader.GetValue(3).ToString(),
                             Price = Convert.ToDecimal(reader.GetValue(4))
                         });
                     }
