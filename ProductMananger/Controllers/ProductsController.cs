@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authorization;
 using BLL;
 using ProductMananger.Models;
+using AspNetCoreHero.ToastNotification.Abstractions;
 
 namespace ProductMananger.Controllers
 {
@@ -21,10 +22,10 @@ namespace ProductMananger.Controllers
     public class ProductsController : Controller
     {
          private readonly Repository<Product> _context;
-        private readonly Repository<Category> _contextCat;
-        private readonly ITokenService tokenService;
+         private readonly Repository<Category> _contextCat;
+         private readonly INotyfService _notyf;
 
-        public ProductsController(Repository<Product> context, Repository<Category> contextCat,ITokenService tokenService)
+        public ProductsController(Repository<Product> context, Repository<Category> contextCat,INotyfService _notyf)
         {
             _context = context;
             _context.requestUrl = "Products";
@@ -32,6 +33,7 @@ namespace ProductMananger.Controllers
             _contextCat = contextCat;
             _contextCat.requestUrl = "Categories";
 
+            this._notyf = _notyf;
         }
 
         // GET: Products
@@ -91,6 +93,7 @@ namespace ProductMananger.Controllers
             if (Request.Form.Files.Count > 0)
             {
                 await Task.Run(() => _context.Save(product));
+                _notyf.Success("Saved Successfully", 3);
                 return RedirectToAction(nameof(Index));
             }
             ModelState.AddModelError(string.Empty, "Please choose an Image to upload");
@@ -143,6 +146,7 @@ namespace ProductMananger.Controllers
                 {
                     AsingImange(product);
                     await Task.Run(() => _context.Update(product, id));
+                    _notyf.Success("Saved Successfully", 3);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -183,8 +187,10 @@ namespace ProductMananger.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-             var product = await Task.Run(()=> _context.Find(id));
-             await Task.Run(()=> _context.Remove(product.ProductId));
+            //I created delete to follow the instruction, my way will be to disable the product.
+            var product = await Task.Run(() => _context.Find(id));
+            await Task.Run(() => _context.Remove(product.ProductId));
+            _notyf.Success("Removed Successfully", 3);
             return RedirectToAction(nameof(Index));
         }
 

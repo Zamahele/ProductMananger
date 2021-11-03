@@ -9,6 +9,7 @@ using BLL.Category;
 using ProductMananger.Data;
 using BLL.Repository;
 using Microsoft.AspNetCore.Authorization;
+using AspNetCoreHero.ToastNotification.Abstractions;
 
 namespace ProductMananger.Controllers
 {
@@ -16,10 +17,12 @@ namespace ProductMananger.Controllers
     public class CategoriesController : Controller
     {
         private readonly Repository<Category> _context;
-        public CategoriesController(Repository<Category> context)
+        private readonly INotyfService _notyf;
+        public CategoriesController(Repository<Category> context,INotyfService _notyf)
         {
             _context = context;
             _context.requestUrl = "Categories";
+             this._notyf = _notyf;
         }
 
         // GET: Categories
@@ -61,6 +64,7 @@ namespace ProductMananger.Controllers
             if (ModelState.IsValid)
             {
                 await Task.Run(()=> _context.Save(category));
+                 _notyf.Success("Saved Successfully", 3);
                 return RedirectToAction(nameof(Index));
             }
             return View(category);
@@ -139,6 +143,7 @@ namespace ProductMananger.Controllers
                 try
                 {
                    await Task.Run(()=> _context.Update(category,id));
+                     _notyf.Success("Saved Successfully", 3);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -178,8 +183,10 @@ namespace ProductMananger.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var category = await Task.Run (()=> _context.Find(id));
-           await Task.Run(()=> _context.Remove(category.CategoryId));
+            //Parent child delete.
+            var category = await Task.Run(() => _context.Find(id));
+            await Task.Run(() => _context.Remove(category.CategoryId));
+            _notyf.Success("Removed Successfully", 3);
             return RedirectToAction(nameof(Index));
         }
 

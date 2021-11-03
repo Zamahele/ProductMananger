@@ -31,7 +31,7 @@ namespace BLL.Product
         [Required]
         public byte[] Image { get; set; }
 
-        [ForeignKey("CategoryId")]
+        [ForeignKey("Category")]
         public int CategoryId { get; set; }
         [DisplayName("Category Name")]
         public Category.Category Category { get; set; }
